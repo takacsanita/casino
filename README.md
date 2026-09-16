@@ -18,7 +18,7 @@ There is no code here yet. There are tests.
 uv run pytest
 ```
 
-Without `uv`: `python -m pip install pytest`, then `python -m pytest`.
+Without `uv`: `python3 -m pip install pytest`, then `python3 -m pytest`.
 
 ## The interface the tests use
 
