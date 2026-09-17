@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cassino</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>Cassino</h1>
+      <div id="scores">
+        <span class="score you">You: <b id="score-you">0</b></span>
+        <span class="score computer">Computer: <b id="score-computer">0</b></span>
+      </div>
+      <button id="new-game">New deal</button>
+    </header>
+
+    <section id="computer-area">
+      <div class="label">Computer <span id="computer-count"></span></div>
+      <div class="row" id="computer-hand"></div>
+      <div class="pile" id="computer-pile"><div class="pile-label">Pile <span id="computer-pile-count">0</span></div></div>
+    </section>
+
+    <section id="table-area">
+      <div class="talon-slot">
+        <div class="label">Talon</div>
+        <div class="talon-count" id="talon-count">0</div>
+      </div>
+      <div class="row" id="table-row"></div>
+    </section>
+
+    <section id="player-area">
+      <div class="pile" id="player-pile"><div class="pile-label">Pile <span id="player-pile-count">0</span></div></div>
+      <div class="row" id="player-hand"></div>
+      <div class="label">You</div>
+    </section>
+
+    <div id="controls">
+      <span id="status"></span>
+      <button id="clear-selection">Clear</button>
+      <button id="play-move" disabled>Play</button>
+    </div>
+
+    <div id="log"></div>
+  </div>
+
+  <div id="overlay" class="hidden">
+    <div id="overlay-box">
+      <h2 id="overlay-title"></h2>
+      <p id="overlay-detail"></p>
+      <button id="overlay-new-game">Play again</button>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
