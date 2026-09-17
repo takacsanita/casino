@@ -3,9 +3,20 @@
   --felt-dark: #085230;
   --card-w: 64px;
   --card-h: 90px;
+  --suit-red: #e2645a;
 }
 
 * { box-sizing: border-box; }
+
+/* Suit glyphs mentioned in running text (move log, status, rules modal,
+   score breakdown) — matches the black/red colouring already used on the
+   card faces themselves. Black suits (spades/clubs) just inherit the
+   surrounding text colour rather than using literal black, since most of
+   this UI sits on a dark felt background where true black would be
+   unreadable; red suits (hearts/diamonds) get an explicit red so the two
+   stay visually distinct, as on a real deck. */
+.suit-black { color: inherit; }
+.suit-red { color: var(--suit-red); }
 
 body {
   margin: 0;
@@ -25,6 +36,8 @@ header {
   align-items: center;
   gap: 16px;
   flex-wrap: wrap;
+  position: relative;
+  z-index: 60;
 }
 
 header h1 {
@@ -156,6 +169,49 @@ button:disabled { opacity: 0.4; cursor: default; }
   min-height: 1.2em;
 }
 
+#score-status {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  align-self: center;
+}
+
+#stats-area {
+  background: var(--felt);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin: 10px 0;
+}
+
+#stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+#stats-table th, #stats-table td {
+  text-align: center;
+  padding: 3px 6px;
+}
+
+#stats-table th:first-child, #stats-table td:first-child {
+  text-align: left;
+  opacity: 0.85;
+}
+
+#stats-table thead th {
+  opacity: 0.7;
+  font-weight: normal;
+  font-size: 0.75rem;
+}
+
+#stats-table tr.stats-points td {
+  border-top: 1px solid rgba(255,255,255,0.25);
+  font-weight: bold;
+  padding-top: 6px;
+}
+#stats-table tr.stats-points td:nth-child(2) { color: #ffd76a; }
+#stats-table tr.stats-points td:nth-child(3) { color: #ff9a8b; }
+
 #log {
   margin-top: 14px;
   font-size: 0.8rem;
@@ -168,19 +224,65 @@ button:disabled { opacity: 0.4; cursor: default; }
 }
 #log div { margin-bottom: 2px; }
 
-#overlay {
+#lang-toggle {
+  display: flex;
+  gap: 2px;
+  background: rgba(0,0,0,0.25);
+  border-radius: 6px;
+  padding: 2px;
+}
+
+.lang-btn {
+  background: transparent;
+  border: none;
+  padding: 5px 10px;
+  opacity: 0.7;
+}
+.lang-btn:hover:not(:disabled) { background: rgba(255,255,255,0.1); }
+.lang-btn.active {
+  background: #1c8a4f;
+  opacity: 1;
+}
+
+.modal-backdrop {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.6);
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 50;
+  padding: 16px;
 }
-#overlay.hidden { display: none; }
-#overlay-box {
+.modal-backdrop.hidden { display: none; }
+
+.modal-box {
   background: #123;
   border-radius: 10px;
   padding: 24px 28px;
-  text-align: center;
+  max-width: 560px;
+  max-height: 82vh;
+  overflow-y: auto;
+  position: relative;
+  line-height: 1.5;
 }
-#overlay-box button { margin-top: 12px; }
+.modal-box.centered { text-align: center; }
+.modal-box button { margin-top: 12px; }
+
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 1.4rem;
+  line-height: 1;
+  padding: 4px 8px;
+  color: #eee;
+}
+.modal-close:hover { background: rgba(255,255,255,0.1); }
+
+#rules-content h2 { margin-top: 0; }
+#rules-content h3 { margin-bottom: 4px; color: #ffd76a; }
+#rules-content ul { margin-top: 0; padding-left: 20px; }
+#rules-content li { margin-bottom: 4px; }

@@ -28,3 +28,24 @@
   * Provide instructions for launching the web server and accessing the game on `localhost`.
   * Provide the complete scoring breakdown (most cards, most diamonds, Big/Little Cassino, Aces, sweeps).
 
+## Task 3: In-Game Rules Guide & Multi-Language Support (EN/HU)
+* **Objective:** Instructed Claude Code to enhance the web UI with interactive rules and language toggling.
+* **Key Requirements:**
+  * Add an in-game rules guide/modal accessible at any point during gameplay detailing rules, card values, and scoring.
+  * Implement a language switch (English / Hungarian) that updates all UI elements, status text, move logs, scoring, and the rules panel in real-time.
+  * Ensure `CLAUDE.md` and `RULES.md` are updated accordingly and all `pytest` tests pass.
+
+### Task 4: Continuous / Live Score Display Fix
+* **Objective:** Instructed Claude Code to fix the live score calculation and updating on the UI.
+* **Key Requirements:**
+  * Fix the UI so scores/stats (captured cards, sweeps, aces, diamonds, current deal points) update in real-time after every move.
+  * Ensure final score displays correctly upon deal completion (`deal_over`).
+  * Ensure live score texts support both English and Hungarian localization.
+  * Verify that core logic tests (`python3 -m pytest`) continue to pass.
+
+  ### Task 5: Suit Symbols UI Fix (Diamonds & Spades)
+* **Objective:** Instructed Claude Code to replace placeholder symbols for card suits with proper suit icons.
+* **Key Requirements:**
+  * Replace placeholder characters with proper Spade (♠) and Diamond (♦) suit symbols or SVG/HTML entities.
+  * Ensure consistent color coding (red for Diamonds, black for Spades) across the game board, logs, scoring panel, and rules modal.
+  * Verify dual-language compatibility and test pass status.

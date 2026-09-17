@@ -32,7 +32,30 @@ def _move_to_json(move: Move) -> dict:
     return {"hand": sorted(move.hand), "table": sorted(move.table)}
 
 
+def _stats(state: State) -> list[dict]:
+    """Per-player breakdown behind the score, for the live stats panel.
+
+    Mirrors the point conditions in ``casino.core.score`` but exposes the
+    raw counts too, since ``score`` itself only returns the point totals.
+    """
+    stats = []
+    for p in (0, 1):
+        pile = state.piles[p]
+        stats.append(
+            {
+                "cards": len(pile),
+                "spades": sum(c.endswith("S") for c in pile),
+                "aces": sum(c.startswith("A") for c in pile),
+                "big_cassino": "10D" in pile,
+                "little_cassino": "2S" in pile,
+                "sweeps": state.sweeps[p],
+            }
+        )
+    return stats
+
+
 def _state_to_json(state: State) -> dict:
+    over = deal_over(state)
     data = {
         "hands": [list(state.hands[0]), list(state.hands[1])],
         "table": list(state.table),
@@ -40,11 +63,13 @@ def _state_to_json(state: State) -> dict:
         "piles": [list(state.piles[0]), list(state.piles[1])],
         "sweeps": list(state.sweeps),
         "player": state.player,
-        "deal_over": deal_over(state),
+        "deal_over": over,
+        # score() is a pure function of piles/sweeps, so it's just as valid
+        # as a running estimate mid-deal as it is once the deal is over.
+        "score": list(score(state)),
+        "stats": _stats(state),
     }
-    if data["deal_over"]:
-        data["score"] = list(score(state))
-    elif state.player == 0:
+    if not over and state.player == 0:
         data["legal_moves"] = [_move_to_json(m) for m in legal_moves(state)]
     return data
 

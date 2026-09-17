@@ -99,8 +99,10 @@ real card art is wanted later; swap the card-rendering function in
 `casino/web.py` runs a tiny stdlib HTTP server. It keeps one game `State`
 server-side per process (single-player-vs-computer, no accounts), exposes:
 
-- `GET  /api/state` — current state as JSON (plus `legal_moves` and
-  `deal_over`/`score` when relevant)
+- `GET  /api/state` — current state as JSON: `hands`, `table`,
+  `talon_count`, `piles`, `sweeps`, `player`, `deal_over`, plus `score`
+  and `stats` (see below) on *every* response, and `legal_moves` only
+  when it's the human's turn and the deal isn't over
 - `POST /api/new_game` — starts a fresh deal
 - `POST /api/move` — `{"hand": [...], "table": [...]}`, applies the
   human's move, then lets the computer play until it's the human's turn
@@ -109,7 +111,73 @@ server-side per process (single-player-vs-computer, no accounts), exposes:
   combination available when a capture exists, otherwise place the
   lowest-value card — mirrors the test suite's own `choose()` heuristic.
 
+`score` and `stats` are always present, not just once `deal_over` is
+true: `casino.core.score()` is a pure function of `piles`/`sweeps` with
+no dependency on the deal having ended, so `_state_to_json` in `web.py`
+calls it unconditionally and the frontend gets a live running score
+after every move. `stats` (built by `_stats()` in `web.py`) is a
+per-player breakdown behind those points — raw counts (`cards`,
+`spades`, `aces`, `sweeps`) plus booleans (`big_cassino`, `little_cassino`)
+for the two named cards — since `score()` itself only returns the two
+point totals, not what earned them. If the scoring rules ever change,
+update `_stats()` alongside `score()` so the breakdown stays consistent
+with the totals it explains.
+
 `static/index.html` polls/calls these endpoints and renders hands, table,
 piles and scores; clicking a hand card selects it, clicking table cards
 toggles them into the pending capture set, and a "Play" button submits
 the move (or places the card alone if no table cards are selected).
+
+### Live score & stats panel
+
+The header score (`#score-you`/`#score-computer`) and the `#stats-area`
+breakdown table are populated straight from every `/api/state` and
+`/api/move` response's `score`/`stats` fields, in `render()`/
+`renderStats()` in `app.js` — no special-casing for `deal_over`, since
+the backend already sends real numbers throughout the deal, not just at
+the end. `#score-status` just swaps a "(current standings)"/"(final)"
+label (`scoreLive`/`scoreFinal` translation keys) depending on
+`deal_over`, purely as a hint to the player that the deal is still in
+progress; the numbers themselves and their update mechanism don't change.
+
+## In-game rules panel
+
+A "Rules" button in the header opens `#rules-modal`, a dismissible overlay
+(close button, backdrop click, all restyled off `.modal-backdrop`/
+`.modal-box` in `style.css`) summarising how to play, card values/special
+mechanics, and the scoring table. Its content lives in `RULES_EN`/`RULES_HU`
+(HTML strings) at the top of `app.js` and is re-rendered on demand by
+`renderRules()`, so it always reflects the current language.
+
+The header's `z-index: 60` deliberately keeps it stacked above
+`.modal-backdrop` (`z-index: 50`) — without that, the language toggle
+would be unreachable while the rules panel is open, since the backdrop
+covers the full viewport.
+
+## Language support (English / Hungarian)
+
+All UI copy — static labels, dynamic status text, the move log, the
+win/lose overlay, and the rules panel — is driven by the `TRANSLATIONS`
+table in `app.js` (keys `en`/`hu`) via a `t(key, ...args)` helper; entries
+are either plain strings or functions for text with interpolated values
+(card names, scores, etc.).
+
+- Static markup carries `data-i18n="key"` attributes (see `index.html`);
+  `applyStaticTranslations()` sweeps them on every render and language
+  switch.
+- The move log is **not** stored as rendered text — each entry is kept as
+  `{key, args}` in `state.logEntries` and the whole log is rebuilt from
+  translations by `renderLog()`. This is what lets switching languages
+  mid-game retranslate every past log line instantly, not just new ones.
+- The current language is persisted to `localStorage` (`cassino-lang`,
+  guarded with try/catch since it's a per-viewer convenience, never load-
+  bearing) and defaults to English.
+- Card codes themselves (`"10D"`, `"AS"`) are never translated — only the
+  surrounding phrase.
+
+To add a UI string: add the key to both `TRANSLATIONS.en` and
+`TRANSLATIONS.hu`, then either tag a static element with
+`data-i18n="key"` or call `t("key", ...)` from `render()`/`logMove()`.
+To add a language: add a new top-level key to `TRANSLATIONS` with every
+existing key translated, and a matching `<button class="lang-btn"
+data-lang="xx">` in the header.

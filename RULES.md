@@ -70,6 +70,31 @@ start over.
 5. After your move, the computer plays automatically (its moves are
    logged), and it's your turn again.
 
+### Live score
+
+The score in the header and the **Score breakdown** table below the
+controls update after **every** move, yours or the computer's — not
+just once the deal ends. The breakdown shows each player's running
+card count, spade count, aces held, whether they hold Big/Little
+Cassino, and sweeps made, alongside the points those currently add up
+to (the same formula from section 4, applied to the cards captured so
+far). A small "(current standings)" note marks it as a live, in-progress
+total; once the deal finishes, that switches to "(final)" and the
+numbers are the official result for the deal — the same figures shown
+in the win/lose summary.
+
+### In-game help and language
+
+- Click **Rules** in the header at any time to open a rules-and-scoring
+  panel without leaving your game in progress — it covers the same
+  material as sections 3 and 4 below in condensed form. Close it with
+  the **×** button or by clicking outside the panel.
+- Click **EN** / **HU** in the header to switch the entire interface —
+  labels, buttons, status text, the move log (including earlier
+  entries), the win/lose summary, and the rules panel itself — between
+  English and Hungarian (Magyar) instantly. Your choice is remembered
+  in the browser for next time.
+
 ## 3. Complete Game Rules
 
 ### Cards and values

@@ -9,48 +9,111 @@
 <body>
   <div id="app">
     <header>
-      <h1>Cassino</h1>
+      <h1 data-i18n="title">Cassino</h1>
       <div id="scores">
-        <span class="score you">You: <b id="score-you">0</b></span>
-        <span class="score computer">Computer: <b id="score-computer">0</b></span>
+        <span class="score you"><span data-i18n="you">You</span>: <b id="score-you">0</b></span>
+        <span class="score computer"><span data-i18n="computer">Computer</span>: <b id="score-computer">0</b></span>
+        <span id="score-status"></span>
       </div>
-      <button id="new-game">New deal</button>
+      <div id="lang-toggle">
+        <button class="lang-btn" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="hu">HU</button>
+      </div>
+      <button id="open-rules" data-i18n="rules">Rules</button>
+      <button id="new-game" data-i18n="newDeal">New deal</button>
     </header>
 
     <section id="computer-area">
-      <div class="label">Computer <span id="computer-count"></span></div>
+      <div class="label"><span data-i18n="computer">Computer</span> <span id="computer-count"></span></div>
       <div class="row" id="computer-hand"></div>
-      <div class="pile" id="computer-pile"><div class="pile-label">Pile <span id="computer-pile-count">0</span></div></div>
+      <div class="pile" id="computer-pile"><div class="pile-label"><span data-i18n="pile">Pile</span> <span id="computer-pile-count">0</span></div></div>
     </section>
 
     <section id="table-area">
       <div class="talon-slot">
-        <div class="label">Talon</div>
+        <div class="label" data-i18n="talon">Talon</div>
         <div class="talon-count" id="talon-count">0</div>
       </div>
       <div class="row" id="table-row"></div>
     </section>
 
     <section id="player-area">
-      <div class="pile" id="player-pile"><div class="pile-label">Pile <span id="player-pile-count">0</span></div></div>
+      <div class="pile" id="player-pile"><div class="pile-label"><span data-i18n="pile">Pile</span> <span id="player-pile-count">0</span></div></div>
       <div class="row" id="player-hand"></div>
-      <div class="label">You</div>
+      <div class="label" data-i18n="you">You</div>
     </section>
 
     <div id="controls">
       <span id="status"></span>
-      <button id="clear-selection">Clear</button>
-      <button id="play-move" disabled>Play</button>
+      <button id="clear-selection" data-i18n="clear">Clear</button>
+      <button id="play-move" data-i18n="play" disabled>Play</button>
     </div>
+
+    <section id="stats-area">
+      <div class="label" data-i18n="statsTitle">Score breakdown</div>
+      <table id="stats-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th data-i18n="you">You</th>
+            <th data-i18n="computer">Computer</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-i18n="statCards">Cards</td>
+            <td id="stat-cards-0"></td>
+            <td id="stat-cards-1"></td>
+          </tr>
+          <tr>
+            <td data-i18n="statSpades">Spades</td>
+            <td id="stat-spades-0"></td>
+            <td id="stat-spades-1"></td>
+          </tr>
+          <tr>
+            <td data-i18n="statAces">Aces</td>
+            <td id="stat-aces-0"></td>
+            <td id="stat-aces-1"></td>
+          </tr>
+          <tr>
+            <td><span data-i18n="statBigCassino">Big Cassino</span> (10<span class="suit-red">&#9830;</span>)</td>
+            <td id="stat-big-0"></td>
+            <td id="stat-big-1"></td>
+          </tr>
+          <tr>
+            <td><span data-i18n="statLittleCassino">Little Cassino</span> (2<span class="suit-black">&#9824;</span>)</td>
+            <td id="stat-little-0"></td>
+            <td id="stat-little-1"></td>
+          </tr>
+          <tr>
+            <td data-i18n="statSweeps">Sweeps</td>
+            <td id="stat-sweeps-0"></td>
+            <td id="stat-sweeps-1"></td>
+          </tr>
+          <tr class="stats-points">
+            <td data-i18n="statPoints">Points</td>
+            <td id="stat-points-0"></td>
+            <td id="stat-points-1"></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
 
     <div id="log"></div>
   </div>
 
-  <div id="overlay" class="hidden">
-    <div id="overlay-box">
+  <div id="overlay" class="modal-backdrop hidden">
+    <div class="modal-box centered">
       <h2 id="overlay-title"></h2>
       <p id="overlay-detail"></p>
-      <button id="overlay-new-game">Play again</button>
+      <button id="overlay-new-game" data-i18n="playAgain">Play again</button>
+    </div>
+  </div>
+
+  <div id="rules-modal" class="modal-backdrop hidden">
+    <div class="modal-box">
+      <button id="rules-close" class="modal-close" aria-label="Close">&times;</button>
+      <div id="rules-content"></div>
     </div>
   </div>
 
